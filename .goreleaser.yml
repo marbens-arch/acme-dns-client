@@ -1,3 +1,5 @@
+version: 2
+
 builds:
   - binary: acme-dns-client
     flags:
@@ -27,9 +29,14 @@ builds:
 
 archives:
   - id: tgz
-    format: tar.gz
-    replacements:
-        darwin: macOS
+    formats: tar.gz
+    name_template: >-
+        {{- .ProjectName }}_
+        {{- .Version }}_
+        {{- if eq .Os "darwin" }}macOS
+        {{- else }}{{ .Os }}{{ end }}
+        {{ .Arch }}
+
     format_overrides:
         - goos: windows
-          format: zip
+          formats: zip
