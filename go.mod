@@ -1,4 +1,4 @@
-module github.com/acme-dns/acme-dns-client
+module github.com/marbens-arch/acme-dns-client
 
 go 1.15
 
