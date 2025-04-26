@@ -17,7 +17,6 @@ builds:
       - windows
       - freebsd
       - openbsd
-      - darwin
     goarch:
       - amd64
       - 386
@@ -30,12 +29,6 @@ builds:
 archives:
   - id: tgz
     formats: tar.gz
-    name_template: >-
-        {{- .ProjectName }}_
-        {{- .Version }}_
-        {{- if eq .Os "darwin" }}macOS
-        {{- else }}{{ .Os }}{{ end }}
-        {{ .Arch }}
 
     format_overrides:
         - goos: windows
