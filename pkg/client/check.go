@@ -6,7 +6,7 @@ import (
 
 	"github.com/acme-dns/acme-dns-client/pkg/dnsclient"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns"
 )
 
 type ConfigurationState struct {

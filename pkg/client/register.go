@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns"
 )
 
 const PUBLIC_ACME_DNS = "https://auth.acme-dns.io"

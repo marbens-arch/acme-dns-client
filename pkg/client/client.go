@@ -1,6 +1,6 @@
 package client
 
-import "github.com/cpu/goacmedns"
+import "github.com/nrdcg/goacmedns"
 
 type AcmednsClient struct {
 	Config *Config

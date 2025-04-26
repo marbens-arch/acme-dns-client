@@ -5,7 +5,7 @@ import (
 
 	"github.com/acme-dns/acme-dns-client/pkg/integration"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns"
 )
 
 func (c *AcmednsClient) Validation() bool {
