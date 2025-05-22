@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/acme-dns/acme-dns-client/pkg/dnsclient"
+	"github.com/marbens-arch/acme-dns-client/pkg/dnsclient"
 
 	"github.com/cpu/goacmedns"
 )
