@@ -2,8 +2,8 @@ package client
 
 import (
 	"fmt"
-	"github.com/acme-dns/acme-dns-client/pkg/dnsclient"
-	"github.com/acme-dns/acme-dns-client/pkg/integration"
+	"github.com/marbens-arch/acme-dns-client/pkg/dnsclient"
+	"github.com/marbens-arch/acme-dns-client/pkg/integration"
 )
 
 var (

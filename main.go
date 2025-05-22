@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/acme-dns/acme-dns-client/pkg/client"
+	"github.com/marbens-arch/acme-dns-client/pkg/client"
 )
 
 const (
