@@ -12,7 +12,7 @@ import (
 
 const (
 	storagepath = "/etc/acmedns/clientstorage.json"
-	VERSION     = "0.4"
+	VERSION     = "1.0.0"
 )
 
 func main() {
