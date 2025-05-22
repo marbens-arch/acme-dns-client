@@ -1,8 +1,15 @@
 # acme-dns-client
 
-A client software for [acme-dns](https://github.com/joohoi/acme-dns) with emphasis on usability and guidance through
+A client software (fork of [acme-dns/acme-dns-client](https://github.com/acme-dns/acme-dns-client)) for [acme-dns](https://github.com/joohoi/acme-dns) with emphasis on usability and guidance through
 setup and additional security safeguard mechanisms. It is designed for usage with existing ACME clients with minimal
 configuration.
+
+## Purpose of the fork
+To continue active development of the inactively developed upstream. Current differences between this fork and upstream include:
+
+- no official macOS binaries in the fork (because I decided they are not worth the burden)
+- CAA record handling has been updated in the fork
+- goreleaser config has been updated to v2 in the fork
 
 ## Installation
 
