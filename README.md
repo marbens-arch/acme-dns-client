@@ -8,7 +8,7 @@ configuration.
 To continue active development of the inactively developed upstream. Current differences between this fork and upstream include:
 
 - no official macOS binaries in the fork (because I decided they are not worth the burden)
-- CAA record handling has been updated in the fork
+- CAA record handling has been updated for [production](https://community.letsencrypt.org/t/enabling-acme-caa-account-and-method-binding/189588/3) in the fork
 - goreleaser config has been updated to v2 in the fork
 
 ## Installation
