@@ -6,14 +6,14 @@ configuration.
 
 ## Installation
 
-- [Download](https://github.com/acme-dns/acme-dns-client/releases/latest) a prebuilt binary from 
-  [releases page](https://github.com/acme-dns/acme-dns-client/releases/latest), unpack and run!
+- [Download](https://github.com/marbens-arch/acme-dns-client/releases/latest) a prebuilt binary from 
+  [releases page](https://github.com/marbens-arch/acme-dns-client/releases/latest), unpack and run!
 
   _or_
-- If you have recent go compiler installed: `go get -u github.com/acme-dns/acme-dns-client` (the same command works for updating)
+- If you have recent go compiler installed: `go get -u github.com/marbens-arch/acme-dns-client` (the same command works for updating)
 
   _or_
-- git clone https://github.com/acme-dns/acme-dns-client ; cd acme-dns-client ; go get ; go build
+- git clone https://github.com/marbens-arch/acme-dns-client ; cd acme-dns-client ; go get ; go build
 
 ## Features
 
