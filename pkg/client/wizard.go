@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"context"
 	"github.com/marbens-arch/acme-dns-client/pkg/dnsclient"
 	"github.com/marbens-arch/acme-dns-client/pkg/integration"
 )
@@ -27,7 +28,7 @@ example CAA record below accordingly and add it to your DNS zone:
 
 func (c *AcmednsClient) CNAMESetupWizard(domain string) bool {
 	c.Debug("Trying to fetch existing account for the domain from storage")
-	acct, err := c.Storage.Fetch(c.Config.Domain)
+	acct, err := c.Storage.Fetch(context.Background(), c.Config.Domain)
 	if err != nil {
 		PrintError(fmt.Sprintf("Error while trying to fetch acme-dns account from storage: %s", err),0)
 		return false

@@ -1,11 +1,12 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns"
 )
 
 const PUBLIC_ACME_DNS = "https://auth.acme-dns.io"
@@ -40,6 +41,8 @@ to suppress this this warning.
 )
 
 func (c *AcmednsClient) Register() {
+	ctx := context.Background()
+
 	cstate := c.ConfigurationState(c.Config.Domain)
 	if !c.Config.Dangerous && c.Config.Server == PUBLIC_ACME_DNS && !cstate.HasAcmednsAccount() {
 		PrintWarning(fmt.Sprintf(PUBLIC_INSTANCE_WARNING), 0)
@@ -47,7 +50,11 @@ func (c *AcmednsClient) Register() {
 	}
 
 	c.Debug("Initializing goacmedns client")
-	client := goacmedns.NewClient(c.Config.Server)
+	client, err := goacmedns.NewClient(c.Config.Server)
+	if err != nil {
+		PrintError("Failed to initalize goacmedns client: " + err.Error(), 0)
+		os.Exit(1)
+	}
 
 	c.Debug("Trying to fetch existing account for the domain from storage")
 	if cstate.HasAcmednsAccount() {
@@ -60,7 +67,7 @@ func (c *AcmednsClient) Register() {
 			allowFrom = strings.Split(c.Config.AllowList, ",")
 		}
 		c.Debug("Registering new account with the acme-dns server")
-		newAccount, err := client.RegisterAccount(allowFrom)
+		newAccount, err := client.RegisterAccount(ctx, allowFrom)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
@@ -68,14 +75,14 @@ func (c *AcmednsClient) Register() {
 
 		cstate.Account = newAccount
 		c.Debug("Adding the registered acme-dns account to storage state")
-		err = c.Storage.Put(c.Config.Domain, cstate.Account)
+		err = c.Storage.Put(ctx, c.Config.Domain, cstate.Account)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
 		}
 
 		c.Debug("Saving the acme-dns account storage to disk")
-		err = c.Storage.Save()
+		err = c.Storage.Save(ctx)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
