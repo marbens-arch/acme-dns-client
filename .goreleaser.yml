@@ -13,19 +13,34 @@ builds:
       - windows
       - freebsd
       - openbsd
+      - darwin
     goarch:
       - amd64
       - 386
       - arm
       - arm64
-    ignore:
-      - goos: freebsd
-        goarch: arm64
+      - mips
+      - mipsle
+      - mips64
+      - mips64le
+      - ppc64
+      - ppc64le
+      - riscv64
 
 archives:
   - id: tgz
     formats: tar.gz
+    name_template: >-
+        {{- .ProjectName }}_
+        {{- .Version }}_
+        {{- if eq .Os "darwin" }}macOS
+        {{- else }}{{ .Os }}{{ end }}
+        {{ .Arch }}
 
     format_overrides:
         - goos: windows
           formats: zip
+
+signs:
+  - artifacts: all
+    args: ["-u", "906A492C534B06DFC0A245D18F5BE03D3FF2EF28", "--output", "${signature}", "--detach-sign", "${artifact}"]
