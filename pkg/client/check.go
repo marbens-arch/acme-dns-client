@@ -1,12 +1,14 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/acme-dns/acme-dns-client/pkg/dnsclient"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns/storage"
+	"github.com/nrdcg/goacmedns"
 )
 
 type ConfigurationState struct {
@@ -35,8 +37,13 @@ func (c *AcmednsClient) CheckAndPrint() {
 		}
 	} else {
 		// Fetch all domains from storage
-		for d, _ := range c.Storage.FetchAll() {
-			domains = append(domains, d)
+		fetched, err := c.Storage.FetchAll(context.Background())
+		if err != nil {
+			c.Verbose(fmt.Sprintf("%s", err))
+		} else {
+			for d, _ := range fetched {
+				domains = append(domains, d)
+			}
 		}
 	}
 	for _, d := range domains {
@@ -73,10 +80,10 @@ func (c *AcmednsClient) ConfigurationState(domain string) ConfigurationState {
 // acmeDnsAccountForDomain returns a preconfigured `goacmedns.Account` for a domain or
 // a fresh `goacmedns.Account` object if not found.
 func (c *AcmednsClient) acmeDnsAccountForDomain(domain string) (goacmedns.Account, error) {
-	adnsacct, err := c.Storage.Fetch(domain)
-	if err != nil && err != goacmedns.ErrDomainNotFound{
+	adnsacct, err := c.Storage.Fetch(context.Background(), domain)
+	if err != nil && err != storage.ErrDomainNotFound{
 		return goacmedns.Account{}, err
-	} else if err == goacmedns.ErrDomainNotFound {
+	} else if err == storage.ErrDomainNotFound {
 		return goacmedns.Account{}, nil
 	}
 	return adnsacct, err
