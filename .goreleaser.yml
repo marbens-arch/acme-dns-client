@@ -41,8 +41,7 @@ archives:
         {{- .ProjectName }}_
         {{- .Version }}_
         {{- if eq .Os "darwin" }}macos
-        {{- else }}{{ .Os }}{{ end }}_
-        {{ .Arch }}
+        {{- else }}{{ .Os }}{{ end }}_{{ .Arch }}
 
     format_overrides:
         - goos: windows
@@ -53,5 +52,5 @@ signs:
     args: ["-u", "906A492C534B06DFC0A245D18F5BE03D3FF2EF28", "--output", "${signature}", "--detach-sign", "${artifact}"]
 
 checksum:
-  name_template: "{{ .ProjectName }}_{{ .Algorithm }}_checksums.txt"
+  name_template: "{{ .ProjectName }}_b2sums.txt"
   algorithm: blake2b
