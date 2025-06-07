@@ -57,7 +57,7 @@ func (c *AcmednsClient) CAASetupWizard(domain string) bool {
 			}
 			fmt.Printf("    -----------------------------------------------\n")
 		}
-		fmt.Printf(CAA_SETTINGS)
+		fmt.Printf("%s", CAA_SETTINGS)
 		return c.monitorCAARecordChange(domain)
 	} else {
 		fmt.Printf(CAA_INFO_ACCOUNT_NOTFOUND, domain)

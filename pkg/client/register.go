@@ -45,7 +45,7 @@ func (c *AcmednsClient) Register() {
 
 	cstate := c.ConfigurationState(c.Config.Domain)
 	if !c.Config.Dangerous && c.Config.Server == PUBLIC_ACME_DNS && !cstate.HasAcmednsAccount() {
-		PrintWarning(fmt.Sprintf(PUBLIC_INSTANCE_WARNING), 0)
+		PrintWarning(PUBLIC_INSTANCE_WARNING, 0)
 		os.Exit(0)
 	}
 
