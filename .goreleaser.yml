@@ -47,6 +47,11 @@ archives:
         - goos: windows
           formats: zip
 
+source:
+  enabled: true
+  format: tar.gz
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+
 signs:
   - artifacts: all
     args: ["-u", "906A492C534B06DFC0A245D18F5BE03D3FF2EF28", "--output", "${signature}", "--detach-sign", "${artifact}"]
