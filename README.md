@@ -8,8 +8,11 @@ configuration.
 To continue active development of the inactively developed upstream. Current differences between this fork and upstream include:
 
 - Modules have been updated
-- CAA record handling has been updated for [production](https://community.letsencrypt.org/t/enabling-acme-caa-account-and-method-binding/189588/3) in the fork
-- goreleaser config has been updated to v2 in the fork
+- CAA record handling has been updated for [production](https://community.letsencrypt.org/t/enabling-acme-caa-account-and-method-binding/189588/3)
+- goreleaser config has been updated to v2
+- Releases and the tags associated with them are signed (valid PGP keys [906A492C534B06DFC0A245D18F5BE03D3FF2EF28](https://keyserver.ubuntu.com/pks/lookup?search=906A492C534B06DFC0A245D18F5BE03D3FF2EF28&fingerprint=on&op=index)). If the releases or tags associated with them are unsigned or signed by a key not listed here, please contact acme-dns-client-security@marcusspencer.us.
+- Releases package source tarballs
+- Binary releases for more platforms
 
 ## Installation
 
