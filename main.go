@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	storagepath = "/etc/acmedns/clientstorage.json"
+	storagepath = "/etc/acme-dns-client/clientstorage.json"
 	VERSION     = "1.0.4"
 )
 
