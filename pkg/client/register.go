@@ -1,11 +1,12 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/cpu/goacmedns"
+	"github.com/nrdcg/goacmedns"
 )
 
 const PUBLIC_ACME_DNS = "https://auth.acme-dns.io"
@@ -37,46 +38,23 @@ acme-dns-client will suggest you to set it up already. This is however optional.
 In case this is intentional, and you understand the associated risks, re-run acme-dns-client with argument "--dangerous"
 to suppress this this warning.
 `
-	CAA_INFO = `
-A CAA record allows you to control additional certificate issuance safeguards. The currently supported
-version allows the domain owner to control which certificate authorities are allowed to issue certificates for the domain in question.
-The certificate authorities MUST check and respect the CAA records in the validation process.
-
-There's also a standard (RFC 8657) that extends the CAA record to limit the issuance of certificates to a specific validation 
-method and/or to a specific ACME account. While they can be tested using staging environment of Let's Encrypt for example,
-they're not enabled in the production yet. It is still be worthwhile to configure them so you'll be protected when the feature gets enabled.
-`
 )
 
 func (c *AcmednsClient) Register() {
+	ctx := context.Background()
+
 	cstate := c.ConfigurationState(c.Config.Domain)
 	if !c.Config.Dangerous && c.Config.Server == PUBLIC_ACME_DNS && !cstate.HasAcmednsAccount() {
-		PrintWarning(fmt.Sprintf(PUBLIC_INSTANCE_WARNING), 0)
+		PrintWarning(PUBLIC_INSTANCE_WARNING, 0)
 		os.Exit(0)
-		/* TODO: enable when ACME-CAA hits production
-		if cstate.HasCAA() {
-			c.Verbose("CAA record found")
-			if !cstate.HasAccountURI() {
-				c.Verbose("CAA record does not have accounturi defined")
-				// No CAA record with accountUri was found. We need to ensure that the user knows what they're doing
-				if YesNoPrompt("Do you wish to set up a CAA record now?", true) {
-					c.CAASetupWizard(c.Config.Domain)
-				} else {
-					os.Exit(0)
-				}
-			}
-		} else {
-			c.Verbose("No CAA record found")
-			if YesNoPrompt("Do you wish to set up a CAA record now?", true) {
-				c.CAASetupWizard(c.Config.Domain)
-			} else {
-				os.Exit(0)
-			}
-		}*/
 	}
 
 	c.Debug("Initializing goacmedns client")
-	client := goacmedns.NewClient(c.Config.Server)
+	client, err := goacmedns.NewClient(c.Config.Server)
+	if err != nil {
+		PrintError("Failed to initalize goacmedns client: " + err.Error(), 0)
+		os.Exit(1)
+	}
 
 	c.Debug("Trying to fetch existing account for the domain from storage")
 	if cstate.HasAcmednsAccount() {
@@ -89,7 +67,7 @@ func (c *AcmednsClient) Register() {
 			allowFrom = strings.Split(c.Config.AllowList, ",")
 		}
 		c.Debug("Registering new account with the acme-dns server")
-		newAccount, err := client.RegisterAccount(allowFrom)
+		newAccount, err := client.RegisterAccount(ctx, allowFrom)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
@@ -97,14 +75,14 @@ func (c *AcmednsClient) Register() {
 
 		cstate.Account = newAccount
 		c.Debug("Adding the registered acme-dns account to storage state")
-		err = c.Storage.Put(c.Config.Domain, cstate.Account)
+		err = c.Storage.Put(ctx, c.Config.Domain, cstate.Account)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
 		}
 
 		c.Debug("Saving the acme-dns account storage to disk")
-		err = c.Storage.Save()
+		err = c.Storage.Save(ctx)
 		if err != nil {
 			PrintError(fmt.Sprintf("%s", err), 0)
 			return
@@ -126,19 +104,22 @@ func (c *AcmednsClient) Register() {
 	}
 
 	if cstate.HasCAA() {
-		c.Verbose("CAA record for the domain exists")
-		if cstate.HasAccountURI() {
-			c.Verbose("CAA accounturi for the domain exists")
-		} else {
-			fmt.Printf(CAA_INFO)
-			if YesNoPrompt("Do you wish to set up a CAA record with accounturi now?", false) {
+		c.Verbose("CAA record found")
+		if !cstate.HasAccountURI() {
+			c.Verbose("CAA record does not have accounturi defined")
+			// No CAA record with accountUri was found. We need to ensure that the user knows what they're doing
+			if YesNoPrompt("Do you wish to set up a CAA record now?", true) {
 				c.CAASetupWizard(c.Config.Domain)
+			} else {
+				os.Exit(0)
 			}
 		}
 	} else {
-		fmt.Printf(CAA_INFO)
-		if YesNoPrompt("Do you wish to set up a CAA record now?", false) {
+		c.Verbose("No CAA record found")
+		if YesNoPrompt("Do you wish to set up a CAA record now?", true) {
 			c.CAASetupWizard(c.Config.Domain)
+		} else {
+			os.Exit(0)
 		}
 	}
 }

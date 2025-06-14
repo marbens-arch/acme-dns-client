@@ -1,19 +1,29 @@
 # acme-dns-client
 
-A client software for [acme-dns](https://github.com/joohoi/acme-dns) with emphasis on usability and guidance through
+A client software (fork of [acme-dns/acme-dns-client](https://github.com/acme-dns/acme-dns-client)) for [acme-dns](https://github.com/joohoi/acme-dns) with emphasis on usability and guidance through
 setup and additional security safeguard mechanisms. It is designed for usage with existing ACME clients with minimal
 configuration.
 
+## Purpose of the fork
+To continue active development of the inactively developed upstream. Current differences between this fork and upstream include:
+
+- Modules have been updated
+- CAA record handling has been updated for [production](https://community.letsencrypt.org/t/enabling-acme-caa-account-and-method-binding/189588/3)
+- goreleaser config has been updated to v2
+- Releases and the tags associated with them are signed (valid PGP keys [906A492C534B06DFC0A245D18F5BE03D3FF2EF28](https://keyserver.ubuntu.com/pks/lookup?search=906A492C534B06DFC0A245D18F5BE03D3FF2EF28&fingerprint=on&op=index)). If a release or a tag associated with one is unsigned or signed by a key not listed here, please contact acme-dns-client-security@marcusspencer.us.
+- Releases package source tarballs
+- Binary releases for more platforms
+
 ## Installation
 
-- [Download](https://github.com/acme-dns/acme-dns-client/releases/latest) a prebuilt binary from 
-  [releases page](https://github.com/acme-dns/acme-dns-client/releases/latest), unpack and run!
+- [Download](https://github.com/marbens-arch/acme-dns-client/releases/latest) a prebuilt binary from 
+  [releases page](https://github.com/marbens-arch/acme-dns-client/releases/latest), unpack and run!
 
   _or_
-- If you have recent go compiler installed: `go get -u github.com/acme-dns/acme-dns-client` (the same command works for updating)
+- If you have recent go compiler installed: `go get -u github.com/marbens-arch/acme-dns-client` (the same command works for updating)
 
   _or_
-- git clone https://github.com/acme-dns/acme-dns-client ; cd acme-dns-client ; go get ; go build
+- git clone https://github.com/marbens-arch/acme-dns-client ; cd acme-dns-client ; go get ; go build
 
 ## Features
 

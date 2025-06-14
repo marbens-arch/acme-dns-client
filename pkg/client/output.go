@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/acme-dns/acme-dns-client/pkg/integration"
+	"github.com/marbens-arch/acme-dns-client/pkg/integration"
 )
 
 func successMarker() string {

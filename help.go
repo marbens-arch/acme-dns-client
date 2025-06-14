@@ -115,7 +115,6 @@ func FSUsage(fset *flag.FlagSet) func() {
 		for _, f := range flags {
 			f.PrintFlag(max_length)
 		}
-		fmt.Printf(usageExamples[fset.Name()])
-		fmt.Printf("\n")
+		fmt.Printf("%s\n", usageExamples[fset.Name()])
 	}
 }

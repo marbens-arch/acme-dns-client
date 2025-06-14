@@ -1,13 +1,11 @@
+version: 2
+
 builds:
   - binary: acme-dns-client
     flags:
       - -trimpath
     env:
       - CGO_ENABLED=0
-    asmflags:
-      - all=-trimpath={{.Env.GOPATH}}
-    gcflags:
-      - all=-trimpath={{.Env.GOPATH}}
     ldflags: |
       -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}} -extldflags '-static'
     goos:
@@ -15,21 +13,49 @@ builds:
       - windows
       - freebsd
       - openbsd
+      - netbsd
+      - dragonfly
       - darwin
+      - solaris
+      - illumos
+      - aix
     goarch:
-      - amd64
       - 386
+      - amd64
       - arm
       - arm64
-    ignore:
-      - goos: freebsd
-        goarch: arm64
+      - mips
+      - mipsle
+      - mips64
+      - mips64le
+      - ppc64
+      - ppc64le
+      - riscv64
+      - loong64
+      - s390x
 
 archives:
   - id: tgz
-    format: tar.gz
-    replacements:
-        darwin: macOS
+    formats: tar.gz
+    name_template: >-
+        {{- .ProjectName }}_
+        {{- .Version }}_
+        {{- if eq .Os "darwin" }}macos
+        {{- else }}{{ .Os }}{{ end }}_{{ .Arch }}
+
     format_overrides:
         - goos: windows
-          format: zip
+          formats: zip
+
+source:
+  enabled: true
+  format: tar.gz
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+
+signs:
+  - artifacts: all
+    args: ["-u", "906A492C534B06DFC0A245D18F5BE03D3FF2EF28", "--output", "${signature}", "--detach-sign", "${artifact}"]
+
+checksum:
+  name_template: "{{ .ProjectName }}_b2sums.txt"
+  algorithm: blake2b

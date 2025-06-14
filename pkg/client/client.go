@@ -1,6 +1,9 @@
 package client
 
-import "github.com/cpu/goacmedns"
+import (
+	"github.com/nrdcg/goacmedns"
+	"github.com/nrdcg/goacmedns/storage"
+)
 
 type AcmednsClient struct {
 	Config *Config
@@ -30,7 +33,7 @@ func NewAcmednsConfig() *Config {
 func NewAcmednsClient(storagepath string) *AcmednsClient {
 	return &AcmednsClient{
 		Config: NewAcmednsConfig(),
-		Storage: goacmedns.NewFileStorage(storagepath, 0600),
+		Storage: storage.NewFile(storagepath, 0600),
 	}
 }
 

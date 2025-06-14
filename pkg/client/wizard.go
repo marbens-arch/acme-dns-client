@@ -2,8 +2,9 @@ package client
 
 import (
 	"fmt"
-	"github.com/acme-dns/acme-dns-client/pkg/dnsclient"
-	"github.com/acme-dns/acme-dns-client/pkg/integration"
+	"context"
+	"github.com/marbens-arch/acme-dns-client/pkg/dnsclient"
+	"github.com/marbens-arch/acme-dns-client/pkg/integration"
 )
 
 var (
@@ -18,8 +19,8 @@ record manually. For this you are going to need to look into how your client sto
 example CAA record below accordingly and add it to your DNS zone:
 ---------------------------
 
-%s.         IN    CAA    0 issue "letsencrypt.org; validationmethods=dns-01; accounturi=https://acme-v01.api.letsencrypt.org/acme/reg/ACCOUNTUID"
-%s.         IN    CAA    0 issuewild "letsencrypt.org; validationmethods=dns-01; accounturi=https://acme-v01.api.letsencrypt.org/acme/reg/ACCOUNTUID"
+%[1]s.         IN    CAA    0 issue "letsencrypt.org; validationmethods=dns-01; accounturi=https://acme-v01.api.letsencrypt.org/acme/reg/ACCOUNTUID"
+%[1]s.         IN    CAA    0 issuewild "letsencrypt.org; validationmethods=dns-01; accounturi=https://acme-v01.api.letsencrypt.org/acme/reg/ACCOUNTUID"
 
 ---------------------------
 `
@@ -27,7 +28,7 @@ example CAA record below accordingly and add it to your DNS zone:
 
 func (c *AcmednsClient) CNAMESetupWizard(domain string) bool {
 	c.Debug("Trying to fetch existing account for the domain from storage")
-	acct, err := c.Storage.Fetch(c.Config.Domain)
+	acct, err := c.Storage.Fetch(context.Background(), c.Config.Domain)
 	if err != nil {
 		PrintError(fmt.Sprintf("Error while trying to fetch acme-dns account from storage: %s", err),0)
 		return false
@@ -56,7 +57,7 @@ func (c *AcmednsClient) CAASetupWizard(domain string) bool {
 			}
 			fmt.Printf("    -----------------------------------------------\n")
 		}
-		fmt.Printf(CAA_SETTINGS)
+		fmt.Printf("%s", CAA_SETTINGS)
 		return c.monitorCAARecordChange(domain)
 	} else {
 		fmt.Printf(CAA_INFO_ACCOUNT_NOTFOUND, domain)
