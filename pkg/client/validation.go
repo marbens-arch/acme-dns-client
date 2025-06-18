@@ -28,7 +28,7 @@ func (c *AcmednsClient) Validation() bool {
 		PrintError(fmt.Sprintf("Domain %s does not have acme-dns account registered for it. Validation failed.", domain),0)
 		return false
 	}
-	client, err := goacmedns.NewClient(acct.ServerURL, nil)
+	client, err := goacmedns.NewClient(acct.ServerURL)
 	err = client.UpdateTXTRecord(ctx, acct, token)
 	if err != nil {
 		PrintError(fmt.Sprintf("Validation failed: %s", err), 0)
