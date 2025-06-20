@@ -43,12 +43,20 @@ archives:
         {{- if eq .Os "darwin" }}macos
         {{- else }}{{ .Os }}{{ end }}_{{ .Arch }}
 
+    # Same thing as name_template but with dashes
+    wrap_in_directory: >-
+        {{- .ProjectName }}-
+        {{- .Version }}-
+        {{- if eq .Os "darwin" }}macos
+        {{- else }}{{ .Os }}{{ end }}-{{ .Arch }}
+
     format_overrides:
         - goos: windows
           formats: zip
 
 source:
   enabled: true
+  prefix_template: "{{ .ProjectName }}-{{ .Version }}/"
   format: tar.gz
   name_template: "{{ .ProjectName }}_{{ .Version }}_source"
 
