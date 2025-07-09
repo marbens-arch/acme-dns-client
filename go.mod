@@ -3,7 +3,7 @@ module github.com/marbens-arch/acme-dns-client
 go 1.24
 
 require (
-	github.com/miekg/dns v1.1.66
+	github.com/miekg/dns v1.1.67
 	github.com/nrdcg/goacmedns v0.2.0
 )
 
