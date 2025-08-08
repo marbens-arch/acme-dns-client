@@ -1,0 +1,27 @@
+name: Go
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Build
+      run: go build -v
+      
+    - name: Upload built binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: acme-dns-client
+        path: acme-dns-client
+
+    - name: Test
+      run: go test -v ./...
+
