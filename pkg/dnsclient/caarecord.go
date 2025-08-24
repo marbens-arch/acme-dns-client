@@ -3,6 +3,7 @@ package dnsclient
 import (
 	"fmt"
 	"strings"
+	"slices"
 
 	"github.com/miekg/dns"
 )
@@ -63,8 +64,7 @@ func (c *Client) CheckCAA(domain string) (CAACheckResult, error) {
 	return check, nil
 }
 
-//GetCAA fetches the CAA records for a domain
-func (c *Client) GetCAA(domain string) ([]CAARecord, error) {
+func (c *Client) getCAACNAMEChain(domain string, cname_chain []string) ([]CAARecord, error) {
 	records := []CAARecord{}
 	msg := new(dns.Msg)
 	msg.SetQuestion(dns.Fqdn(domain), dns.TypeCAA)
@@ -82,13 +82,24 @@ func (c *Client) GetCAA(domain string) ([]CAARecord, error) {
 	}
 
 	for _, a := range in.Answer {
-		if caa, ok := a.(*dns.CAA); ok {
-			rec, err := ParseNewRecord(caa)
+		switch rr := a.(type) {
+		case *dns.CAA:
+			rec, err := ParseNewRecord(rr)
 			if err != nil {
 				return records, fmt.Errorf("Encountered an error while trying to parse CAA record: %s", err)
 			}
 			records = append(records, rec)
-		} else {
+
+		case *dns.CNAME:
+			if !in.RecursionAvailable {
+				if slices.Contains(cname_chain, rr.Target) {
+					return nil, fmt.Errorf("CNAME loop detected in answer to CAA query to domain %s\n", domain)
+				}
+
+				return c.getCAACNAMEChain(rr.Target, append(cname_chain, domain))
+			}
+
+		default:
 			return records, fmt.Errorf("Unexpected record returned with CAA query to domain %s\n", domain)
 		}
 	}
@@ -96,6 +107,11 @@ func (c *Client) GetCAA(domain string) ([]CAARecord, error) {
 		return records, ErrCAARecordNotFound
 	}
 	return records, err
+}
+
+//GetCAA fetches the CAA records for a domain
+func (c *Client) GetCAA(domain string) ([]CAARecord, error) {
+	return c.getCAACNAMEChain(domain, nil)
 }
 
 //ParseNewRecord parses a CAA entry, and returns a new Record instance
