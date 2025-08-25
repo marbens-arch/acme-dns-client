@@ -12,7 +12,7 @@ import (
 
 const (
 	storagepath = "/etc/acme-dns-client/clientstorage.json"
-	VERSION     = "2.1.3"
+	VERSION     = "2.1.4"
 )
 
 func main() {
