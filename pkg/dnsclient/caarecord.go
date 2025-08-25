@@ -92,7 +92,7 @@ func (c *Client) getCAACNAMEChain(domain string, cname_chain []string) ([]CAARec
 
 		case *dns.CNAME:
 			if !in.RecursionAvailable {
-				if slices.Contains(cname_chain, rr.Target) {
+				if rr.Hdr.Name == rr.Target || slices.Contains(cname_chain, rr.Target) {
 					return nil, fmt.Errorf("CNAME loop detected in answer to CAA query to domain %s\n", domain)
 				}
 
